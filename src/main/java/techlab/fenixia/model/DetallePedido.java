@@ -17,11 +17,11 @@ public class DetallePedido {
     private double precioUni;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
+    @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
-    
-    @ManyToOne 
-    @JoinColumn(name = "producti_id",  nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
     public DetallePedido(){
 
