@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
+import techlab.fenixia.model.MovimientoStock;
 import techlab.fenixia.model.Producto;
 import techlab.fenixia.service.ProductoService;
 
@@ -64,4 +64,14 @@ public class ProductoController {
         int cantidad = datos.get("cantidad");
         return productoService.actualizarStock(id, cantidad);
     }
+    @GetMapping("/movimientos")
+    public List<MovimientoStock> listarMovimientos() {
+        return productoService.listarMovimientos();
+    }
+    @PostMapping("/{id}/movimientos")
+    public List<MovimientoStock> listarMovimientosProductos(@PathVariable Long id) {
+        return productoService.listarMovimientosProductos(id);
+    }
+    
+    
 }

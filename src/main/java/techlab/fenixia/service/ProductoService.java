@@ -74,4 +74,11 @@ public class ProductoService {
         Producto producto = buscaProducto(id);
         productoRepository.delete(producto);
     }
+    public List<MovimientoStock> listarMovimientos(){
+        return movimientoStockRepository.findAll();
+    }
+    public List<MovimientoStock>listarMovimientosProductos(Long productoId){
+        buscaProducto(productoId);
+        return movimientoStockRepository.findByProductoId(productoId);
+    }
 }
