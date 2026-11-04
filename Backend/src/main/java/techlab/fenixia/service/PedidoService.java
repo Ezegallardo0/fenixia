@@ -44,8 +44,8 @@ public class PedidoService {
     @Transactional
     public PedidoResponse crearPedido(CrearPedidoRequest request) {
         if (request == null
-                || request.getNombreC() == null
-                || request.getNombreC().isBlank()) {
+                || request.getNombreCliente() == null
+                || request.getNombreCliente().isBlank()) {
             throw new IllegalArgumentException("El nombre del cliente es obligatorio.");
         }
 
@@ -75,7 +75,7 @@ public class PedidoService {
             productos.add(producto);
         }
 
-        Pedido pedido = new Pedido(request.getNombreC());
+        Pedido pedido = new Pedido(request.getNombreCliente());
         pedido = pedidoRepository.save(pedido);
         double total = 0;
 

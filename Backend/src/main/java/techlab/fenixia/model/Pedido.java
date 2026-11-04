@@ -14,15 +14,15 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombreC;
+    private String nombreCliente;
     private LocalDateTime fecha;
     private String estado;
     private double total;
 
     public Pedido(){
     }
-    public Pedido(String nombreC){
-        this.nombreC = nombreC;
+    public Pedido(String nombreCliente){
+        this.nombreCliente = nombreCliente;
         this.estado= "PENDIENTE";
         this.total = 0;
     }
@@ -38,14 +38,11 @@ public class Pedido {
     public Long getId(){
         return id;
     }
-    public String getNombreC(){
-        return nombreC;
-    }
     public String getNombreCliente(){
-        return nombreC;
+        return nombreCliente;
     }
-    public void setNombreC(String nombreC){
-        this.nombreC = nombreC;
+    public void setNombreCliente(String nombreCliente){
+        this.nombreCliente = nombreCliente;
     }
     public LocalDateTime getFecha(){
         return fecha;

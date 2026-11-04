@@ -3,19 +3,19 @@ package techlab.fenixia.dto;
 import java.util.List;
 
 public class CrearPedidoRequest {
-    private String nombreC;
+    private String nombreCliente;
     private List<ItemPedidoRequest> items;
 
     public CrearPedidoRequest() {
 
     }
 
-    public String getNombreC() {
-        return nombreC;
+    public String getNombreCliente() {
+        return nombreCliente;
     }
 
-    public void setNombreC(String nombreC) {
-        this.nombreC = nombreC;
+    public void setNombreCliente(String nombreCliente) {
+        this.nombreCliente = nombreCliente;
     }
 
     public List<ItemPedidoRequest> getItems() {

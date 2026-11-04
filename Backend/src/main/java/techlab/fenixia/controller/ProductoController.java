@@ -57,21 +57,18 @@ public class ProductoController {
     public void eliminarProducto(@PathVariable Long id) {
         productoService.eliminarProducto(id);
     }
+
     @PatchMapping("/{id}/stock")
     public Producto actualizarStock(
             @PathVariable Long id,
-            @RequestBody Map<String, Integer>datos){
+            @RequestBody Map<String, Integer> datos) {
         int cantidad = datos.get("cantidad");
         return productoService.actualizarStock(id, cantidad);
     }
-    @GetMapping("/movimientos")
-    public List<MovimientoStock> listarMovimientos() {
-        return productoService.listarMovimientos();
+
+    @GetMapping("/{id}/movimientos")
+    public List<MovimientoStock> listarMovimientosPorProducto(@PathVariable Long id) {
+        return productoService.listarMovimientosPorProducto(id);
     }
-    @PostMapping("/{id}/movimientos")
-    public List<MovimientoStock> listarMovimientosProductos(@PathVariable Long id) {
-        return productoService.listarMovimientosProductos(id);
-    }
-    
-    
+
 }
