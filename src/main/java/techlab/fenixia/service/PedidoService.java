@@ -2,6 +2,8 @@ package techlab.fenixia.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,6 +93,20 @@ public class PedidoService {
         }
 
         pedido.setTotal(total);
+        return pedidoRepository.save(pedido);
+    }
+
+    public Pedido actualizarEstado(Long id, String nuevoEstado) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontrado("No existe el pedido con id: " + id));
+        if (nuevoEstado == null || nuevoEstado.isBlank()) {
+            throw new IllegalArgumentException("El estado no puede estar vacio.");
+        }
+        nuevoEstado = nuevoEstado.trim().toUpperCase(Locale.ROOT);
+        if (!Set.of("PENDIENTE", "CONFIRMADO", "CANCELADO", "COMPLETADO").contains(nuevoEstado)) {
+            throw new IllegalArgumentException("El estado ingresado no es valido");
+        }
+        pedido.setEstado(nuevoEstado);
         return pedidoRepository.save(pedido);
     }
 }

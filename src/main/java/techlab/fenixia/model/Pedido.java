@@ -50,6 +50,9 @@ public class Pedido {
     public String getEstado(){
         return estado;
     }
+    public void setEstado(String estado){
+        this.estado = estado;
+    }
     public double getTotal(){
         return total;
     }
