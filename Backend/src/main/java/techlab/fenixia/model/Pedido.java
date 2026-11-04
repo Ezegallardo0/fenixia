@@ -41,6 +41,9 @@ public class Pedido {
     public String getNombreC(){
         return nombreC;
     }
+    public String getNombreCliente(){
+        return nombreC;
+    }
     public void setNombreC(String nombreC){
         this.nombreC = nombreC;
     }

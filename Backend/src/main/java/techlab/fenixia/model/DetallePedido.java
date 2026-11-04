@@ -50,8 +50,14 @@ public class DetallePedido {
     public double getPrecioUni(){
         return precioUni;
     }
+    public double getPrecioUnitario(){
+        return precioUni;
+    }
     public void setPrecioUni(double precioUni){
         this.precioUni = precioUni;
+    }
+    public void setPrecioUnitario(double precioUnitario){
+        this.precioUni = precioUnitario;
     }
     public Pedido getPedido(){
         return pedido;

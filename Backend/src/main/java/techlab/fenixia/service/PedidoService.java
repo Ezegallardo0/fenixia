@@ -19,6 +19,8 @@ import techlab.fenixia.repository.DetallePedidoRepository;
 import techlab.fenixia.repository.MovimientoStockRepository;
 import techlab.fenixia.repository.PedidoRepository;
 import techlab.fenixia.repository.ProductoRepository;
+import techlab.fenixia.dto.PedidoResponse;
+import techlab.fenixia.dto.DetallePedidoResponse;
 
 @Service
 public class PedidoService {
@@ -40,7 +42,7 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido crearPedido(CrearPedidoRequest request) {
+    public PedidoResponse crearPedido(CrearPedidoRequest request) {
         if (request == null
                 || request.getNombreC() == null
                 || request.getNombreC().isBlank()) {
@@ -93,20 +95,125 @@ public class PedidoService {
         }
 
         pedido.setTotal(total);
-        return pedidoRepository.save(pedido);
+        return convertirPedido(pedidoRepository.save(pedido));
     }
 
-    public Pedido actualizarEstado(Long id, String nuevoEstado) {
-        Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontrado("No existe el pedido con id: " + id));
+    public PedidoResponse actualizarEstado(Long id, String nuevoEstado) {
+
+        Pedido pedido = buscarPedido(id);
+
         if (nuevoEstado == null || nuevoEstado.isBlank()) {
-            throw new IllegalArgumentException("El estado no puede estar vacio.");
+            throw new IllegalArgumentException(
+                    "El estado no puede estar vacío");
         }
-        nuevoEstado = nuevoEstado.trim().toUpperCase(Locale.ROOT);
-        if (!Set.of("PENDIENTE", "CONFIRMADO", "CANCELADO", "COMPLETADO").contains(nuevoEstado)) {
-            throw new IllegalArgumentException("El estado ingresado no es valido");
+
+        nuevoEstado = nuevoEstado.toUpperCase().trim();
+
+        String estadoActual = pedido.getEstado();
+
+        if (nuevoEstado.equals("CANCELADO")) {
+            throw new IllegalArgumentException(
+                    "Para cancelar un pedido utilizá el endpoint de cancelación");
         }
+
+        if (estadoActual.equals("CANCELADO")
+                || estadoActual.equals("COMPLETADO")) {
+            throw new IllegalArgumentException(
+                    "No se puede modificar un pedido en estado "
+                            + estadoActual);
+        }
+
+        if (estadoActual.equals("PENDIENTE")
+                && !nuevoEstado.equals("CONFIRMADO")) {
+            throw new IllegalArgumentException(
+                    "Un pedido pendiente solamente puede confirmarse o cancelarse");
+        }
+
+        if (estadoActual.equals("CONFIRMADO")
+                && !nuevoEstado.equals("COMPLETADO")) {
+            throw new IllegalArgumentException(
+                    "Un pedido confirmado solamente puede completarse o cancelarse");
+        }
+
         pedido.setEstado(nuevoEstado);
-        return pedidoRepository.save(pedido);
+
+        return convertirPedido(pedidoRepository.save(pedido));
+    }
+
+    @Transactional
+    public PedidoResponse cancelarPedido(Long id) {
+        Pedido pedido = buscarPedido(id);
+        if (pedido.getEstado().equals("CANCELADO")) {
+            throw new IllegalArgumentException("El pedido ya se encuentra cancelado.");
+        }
+        if (pedido.getEstado().equals("COMPLETADO")) {
+            throw new IllegalArgumentException(
+                    "No se puede cancelar un pedido completado");
+        }
+        List<DetallePedido> detalles = detallePedidoRepository.findByPedidoId(id);
+
+        for (DetallePedido detalle : detalles) {
+            Producto producto = detalle.getProducto();
+
+            producto.setStock(
+                    producto.getStock() + detalle.getCantidad());
+            productoRepository.save(producto);
+
+            MovimientoStock movimiento = new MovimientoStock(
+                    "ENTRADA",
+                    detalle.getCantidad(),
+                    producto);
+            movimientoStockRepository.save(movimiento);
+        }
+        pedido.setEstado("CANCELADO");
+        return convertirPedido(pedidoRepository.save(pedido));
+    }
+
+    private Pedido buscarPedido(Long id) {
+        return pedidoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontrado("No existe un pedido con el ID " + id));
+    }
+
+    public PedidoResponse convertirPedido(Pedido pedido) {
+        return new PedidoResponse(
+                pedido.getId(),
+                pedido.getNombreCliente(),
+                pedido.getFecha(),
+                pedido.getEstado(),
+                pedido.getTotal());
+    }
+
+    public DetallePedidoResponse convertirDetalle(DetallePedido detalle) {
+        return new DetallePedidoResponse(
+                detalle.getId(),
+                detalle.getProducto().getId(),
+                detalle.getProducto().getNombre(),
+                detalle.getCantidad(),
+                detalle.getPrecioUnitario());
+    }
+
+    public List<PedidoResponse> listarPedidos() {
+
+        return pedidoRepository.findAll()
+                .stream()
+                .map(this::convertirPedido)
+                .toList();
+    }
+
+    public PedidoResponse obtenerPedido(Long id) {
+
+        Pedido pedido = buscarPedido(id);
+
+        return convertirPedido(pedido);
+    }
+
+    public List<DetallePedidoResponse> listarDetalles(Long pedidoId) {
+
+        buscarPedido(pedidoId);
+
+        return detallePedidoRepository.findByPedidoId(pedidoId)
+                .stream()
+                .map(this::convertirDetalle)
+                .toList();
     }
 }
