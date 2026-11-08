@@ -1,49 +1,76 @@
-# Fenixia
+<div align="center">
 
-Fenixia es una aplicación web para explorar un catálogo de muebles y gestionar productos, stock y pedidos. El repositorio contiene un frontend en React y una API REST en Spring Boot que persiste los datos en PostgreSQL.
+# FENIXIA
 
-## Funcionalidades
+### Muebles con identidad. Espacios que se sienten como hogar.
 
-- Explorar el catálogo y consultar el detalle de los productos.
-- Crear, editar y eliminar productos.
-- Actualizar el stock y consultar sus movimientos.
-- Crear y consultar pedidos, ver sus detalles y actualizar su estado o cancelarlos.
-- Usar datos de muestra en el frontend cuando la API no está disponible. En ese modo, los cambios se mantienen solo en memoria y no se guardan en la base de datos.
+Diseño, calidez y confort para transformar cada ambiente.
 
-## Tecnologías
+[Conocé Fenixia en Instagram](https://www.instagram.com/fenixiaa.visual.integral/)
 
-- **Frontend:** React, Vite y JavaScript.
-- **Backend:** Java 25, Spring Boot, Spring Data JPA y Maven.
-- **Base de datos:** PostgreSQL.
+<br />
 
-## Requisitos
+![React](https://img.shields.io/badge/React-19-232323?style=flat&logo=react&logoColor=61DAFB)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4-232323?style=flat&logo=springboot&logoColor=6DB33F)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-232323?style=flat&logo=postgresql&logoColor=4169E1)
 
-- Java 25.
-- Node.js y npm, en versiones compatibles con Vite 8.
-- PostgreSQL.
+</div>
 
-## Configuración y ejecución
+---
 
-### 1. Preparar PostgreSQL
+Fenixia Visual Integral es una experiencia digital para descubrir mobiliario de autor, explorar el catálogo y gestionar compras. El proyecto combina una tienda hecha con **React** y una API en **Spring Boot**, con persistencia en **PostgreSQL**.
 
-Crea una base de datos llamada `fenixia` y configura la conexión para que coincida con tus credenciales locales. La configuración actual está en `Backend/src/main/resources/application.properties` y usa `localhost:5432` y el usuario `postgres` por defecto. Define allí tu contraseña local; no la compartas ni la subas al repositorio.
+## ✨ La experiencia
 
-Hibernate actualiza el esquema automáticamente al iniciar la aplicación.
+- **Explorá** el catálogo, descubrí cada pieza y guardá tus favoritos.
+- **Armá tu carrito** y generá pedidos.
+- **Gestioná productos** y mantené el stock al día.
+- **Seguí los pedidos**, revisá sus detalles y actualizá su estado.
+- **Probá la interfaz** con cuentas y datos de demostración.
 
-### 2. Iniciar el backend
+> La autenticación es solo una simulación del frontend: no hay gestión real de usuarios en el backend. Si la API está desconectada, la aplicación usa datos locales en memoria; los cambios de ese modo no se guardan y se pierden al recargar.
 
-Desde la raíz del repositorio:
+## 📸 Encontranos
+
+¿Querés conocer más sobre nuestros muebles y espacios?
+
+### [@fenixiaa.visual.integral en Instagram →](https://www.instagram.com/fenixiaa.visual.integral/)
+
+---
+
+## 🚀 Cómo ejecutar el proyecto
+
+### Necesitás
+
+- Java 25
+- Node.js compatible con Vite 8 y npm
+- PostgreSQL
+
+### 1. Prepará la base de datos
+
+Crea una base llamada `fenixia` en PostgreSQL:
+
+```sql
+CREATE DATABASE fenixia;
+```
+
+La configuración local predeterminada usa `localhost:5432` y el usuario `postgres`. Configurá la contraseña con una variable de entorno; no guardes credenciales en el repositorio.
+
+### 2. Iniciá la API
+
+En PowerShell, desde la raíz del proyecto:
 
 ```powershell
+$env:SPRING_DATASOURCE_PASSWORD = "tu contraseña local"
 cd Backend
 .\mvnw.cmd spring-boot:run
 ```
 
-La API estará disponible en `http://localhost:8080`.
+La API queda disponible en `http://localhost:8080`. Hibernate actualiza el esquema al iniciar. Si el catálogo está vacío, podés cargar los muebles de muestra desde la interfaz.
 
-### 3. Iniciar el frontend
+### 3. Iniciá la tienda
 
-En otra terminal, desde la raíz del repositorio:
+En otra terminal:
 
 ```powershell
 cd Frontend
@@ -51,28 +78,67 @@ npm ci
 npm run dev
 ```
 
-Abre `http://localhost:5173`. Vite reenvía las solicitudes `/api` al backend en `http://localhost:8080`.
+Abrí [`http://localhost:5173`](http://localhost:5173). Vite conecta las solicitudes `/api` con el backend local.
 
-## API principal
+## 🧰 Tecnologías
 
-La API usa el prefijo `http://localhost:8080/api`.
-
-| Recurso | Operaciones |
+| Tienda | API y datos |
 | --- | --- |
-| `/productos` | Listar (`GET`), crear (`POST`), consultar por ID (`GET /{id}`), actualizar (`PUT /{id}`) y eliminar (`DELETE /{id}`). |
-| `/productos/{id}/stock` | Actualizar stock (`PATCH`). Recibe `{"cantidad": 5}`; los valores negativos representan una salida. |
-| `/productos/{id}/movimientos` | Consultar movimientos de stock (`GET`). |
-| `/pedidos` | Listar pedidos (`GET`) y crear (`POST`). |
-| `/pedidos/{id}` | Consultar un pedido (`GET`). |
-| `/pedidos/{id}/detalles` | Consultar los detalles (`GET`). |
-| `/pedidos/{id}/estado` | Cambiar el estado (`PATCH`). |
-| `/pedidos/{id}/cancelar` | Cancelar un pedido (`DELETE`). |
+| React 19 · JavaScript · Vite 8 | Java 25 · Spring Boot 4 · Spring Data JPA · PostgreSQL |
 
-Para crear un pedido, envía un cuerpo JSON con el nombre del cliente y al menos un artículo:
+## 🧪 Comprobaciones
+
+```powershell
+# Backend
+cd Backend
+.\mvnw.cmd test
+```
+
+```powershell
+# Frontend
+cd Frontend
+npm run build
+npm run lint
+```
+
+## 🗂️ Estructura
+
+```text
+Backend/
+  src/main/java/       API, lógica de negocio y persistencia
+  src/main/resources/  Configuración de la aplicación
+Frontend/
+  src/components/      Interfaz y componentes
+  src/context/         Carrito, favoritos y sesión de demostración
+  src/services/        API y datos de demostración
+```
+
+<details>
+<summary>📡 Endpoints de la API</summary>
+
+Base local: `http://localhost:8080/api`
+
+| Método | Ruta | Acción |
+| --- | --- | --- |
+| `GET` | `/productos` | Listar productos |
+| `GET` | `/productos/{id}` | Ver un producto |
+| `POST` | `/productos` | Crear un producto |
+| `PUT` | `/productos/{id}` | Actualizar un producto |
+| `DELETE` | `/productos/{id}` | Eliminar un producto |
+| `PATCH` | `/productos/{id}/stock` | Ajustar el stock |
+| `GET` | `/productos/{id}/movimientos` | Ver movimientos de stock |
+| `GET` | `/pedidos` | Listar pedidos |
+| `POST` | `/pedidos` | Crear un pedido |
+| `GET` | `/pedidos/{id}` | Ver un pedido |
+| `GET` | `/pedidos/{id}/detalles` | Ver sus artículos |
+| `PATCH` | `/pedidos/{id}/estado` | Cambiar su estado |
+| `DELETE` | `/pedidos/{id}/cancelar` | Cancelarlo |
+
+Para ajustar stock, enviá `{"cantidad": 5}`; los valores negativos descuentan unidades. Para crear un pedido:
 
 ```json
 {
-  "nombreCliente": "Nombre del cliente",
+  "nombreCliente": "Camila Rodríguez",
   "items": [
     {
       "productoId": 1,
@@ -82,26 +148,11 @@ Para crear un pedido, envía un cuerpo JSON con el nombre del cliente y al menos
 }
 ```
 
-## Comprobaciones
+</details>
 
-Para ejecutar las pruebas del backend:
+<div align="center">
 
-```powershell
-cd Backend
-.\mvnw.cmd test
-```
+Hecho con dedicación para **Fenixia Visual Integral**<br />
+[Instagram @fenixiaa.visual.integral](https://www.instagram.com/fenixiaa.visual.integral/)
 
-Para compilar y revisar el frontend:
-
-```powershell
-cd Frontend
-npm run build
-npm run lint
-```
-
-## Estructura del repositorio
-
-```text
-Backend/   API REST y persistencia
-Frontend/  Aplicación web
-```
+</div>
